@@ -49,12 +49,12 @@ export function MonitoringView({
   };
 
   return (
-    <div className="grid grid-cols-12 gap-8 animate-in fade-in duration-300">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 animate-in fade-in duration-300">
       {/* LEFT COLUMN - STATS & GRIDS */}
-      <div className="col-span-12 lg:col-span-8 space-y-8">
+      <div className="lg:col-span-8 space-y-4 lg:space-y-8">
         
         {/* 1. Metric Strip (Minimal) */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
            <MetricItem 
               label="Success Rate" 
               value={`${metrics.success_rate.toFixed(1)}%`}
@@ -84,7 +84,7 @@ export function MonitoringView({
         {/* 2. Bank Health Grid (Clean Cards) */}
         <div>
            <SectionHeader title="Bank Connectivity Status" />
-           <div className="grid grid-cols-2 gap-4">
+           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {banks.map((bank) => (
                 <div key={bank.name} className="bg-zinc-900/40 border border-white/5 rounded-lg p-5 hover:border-white/10 transition-colors group backdrop-blur-md">
                    <div className="flex justify-between items-start mb-3">
@@ -133,7 +133,7 @@ export function MonitoringView({
       </div>
 
       {/* RIGHT COLUMN - APPROVALS */}
-      <div className="col-span-12 lg:col-span-4 flex flex-col h-full space-y-6">
+      <div className="lg:col-span-4 flex flex-col space-y-4 lg:space-y-6">
          <SectionHeader title="Pending Approvals" action={
             pendingApprovals.length > 0 && (
                <Button variant="ghost" size="sm" onClick={onApproveAll} className="h-6 text-[10px] text-emerald-500 hover:text-emerald-400 hover:bg-emerald-500/10 px-2">
@@ -196,12 +196,12 @@ export function MonitoringView({
 // Sub-components for Cleaner Code
 function MetricItem({ label, value, trend, statusColor }: { label: string, value: string, trend: "up" | "down" | "stable", statusColor: string }) {
    return (
-      <div className="bg-zinc-900/40 border border-white/5 rounded-lg p-5 flex flex-col justify-between h-28 backdrop-blur-md">
-         <span className="text-[11px] text-zinc-500 font-semibold uppercase tracking-wider">{label}</span>
-         <div className={`text-3xl font-medium tracking-tight ${statusColor} font-sans`}>
+      <div className="bg-zinc-900/40 border border-white/5 rounded-lg p-3 sm:p-5 flex flex-col justify-between h-20 sm:h-28 backdrop-blur-md overflow-hidden">
+         <span className="text-[9px] sm:text-[11px] text-zinc-500 font-semibold uppercase tracking-wider truncate">{label}</span>
+         <div className={`text-xl sm:text-3xl font-medium tracking-tight ${statusColor} font-sans truncate`}>
             {value}
          </div>
-         {trend === 'up' && <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden mt-2"><div className="h-full bg-zinc-700 w-3/4 rounded-full"/></div>}
+         {trend === 'up' && <div className="h-1 w-full bg-zinc-800 rounded-full overflow-hidden mt-1 sm:mt-2"><div className="h-full bg-zinc-700 w-3/4 rounded-full"/></div>}
       </div>
    )
 }

@@ -10,8 +10,15 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: REDIS_URL
-        sync: false
-      - key: DATABASE_URL
-        sync: false
+        fromService:
+          type: redis
+          name: payment-ops-redis
+          property: connectionString
     rootDir: backend
-    healthCheckPath: /health
+    healthCheckPath: /api/health
+
+  - type: redis
+    name: payment-ops-redis
+    region: oregon
+    plan: free
+    maxmemoryPolicy: allkeys-lru

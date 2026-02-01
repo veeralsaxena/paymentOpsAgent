@@ -47,9 +47,9 @@ export function SimulationView({
   onToggleSimulator,
 }: SimulationViewProps) {
   return (
-    <div className="grid grid-cols-12 gap-6 animate-in fade-in duration-500">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 animate-in fade-in duration-500">
       {/* Left Column - Controls & Chaos */}
-      <div className="col-span-12 lg:col-span-4 space-y-6">
+      <div className="lg:col-span-4 space-y-4 lg:space-y-6">
         <AgentControls
           isRunning={agentRunning}
           isManualMode={manualMode}
@@ -93,8 +93,8 @@ export function SimulationView({
       </div>
 
       {/* Right Column - Terminal */}
-      <div className="col-span-12 lg:col-span-8">
-        <AgentTerminal logs={logs} className="h-[calc(100vh-140px)]" />
+      <div className="lg:col-span-8">
+        <AgentTerminal logs={logs} className="h-[50vh] lg:h-[calc(100vh-140px)]" />
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ export default function LandingPage() {
         <div className="hidden md:flex items-center gap-8 text-sm text-zinc-400 font-medium">
             <Link href="#architecture" className="hover:text-white transition-colors hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">Architecture</Link>
             <Link href="#capabilities" className="hover:text-white transition-colors hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">Capabilities</Link>
-            <Link href="https://github.com/taqneeq/hackathon" target="_blank" className="hover:text-white transition-colors hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">GitHub</Link>
+            <Link href="https://github.com/veeralsaxena/paymentOpsAgent" target="_blank" className="hover:text-white transition-colors hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">GitHub</Link>
         </div>
         <div>
             <Link href="/war-room">

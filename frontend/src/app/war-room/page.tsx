@@ -25,7 +25,9 @@ import {
   Command, 
   Zap,
   Shield,
-  Server
+  Server,
+  Menu,
+  X
 } from "lucide-react";
 
 // Types
@@ -73,6 +75,7 @@ export default function WarRoomDashboard() {
   const [chaosMode, setChaosMode] = useState(false);
   
   const wsRef = useRef<WebSocket | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // --- WEBSOCKET CONNECTION ---
   const connectWebSocket = useCallback(() => {
@@ -234,8 +237,21 @@ export default function WarRoomDashboard() {
   return (
     <div className="flex h-screen bg-black text-white font-sans selection:bg-white/20 selection:text-white overflow-hidden">
       
+      {/* Mobile Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
       {/* 1. SIDEBAR (Vertical Navigation) */}
-      <aside className="w-64 border-r border-white/5 flex flex-col bg-zinc-950/50 backdrop-blur-xl">
+      <aside className={`
+        fixed lg:relative inset-y-0 left-0 z-50
+        w-64 border-r border-white/5 flex flex-col bg-zinc-950/95 lg:bg-zinc-950/50 backdrop-blur-xl
+        transform transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
         {/* Workspace Brand */}
         <div className="h-12 flex items-center px-4 border-b border-white/5 gap-2">
            <div className="w-5 h-5 bg-white text-black rounded flex items-center justify-center text-[10px] font-bold">
@@ -243,6 +259,13 @@ export default function WarRoomDashboard() {
            </div>
            <span className="text-sm font-medium text-white tracking-tight">PaymentOps</span>
            <span className="text-xs text-zinc-500 ml-auto font-mono">PRO</span>
+           {/* Close button for mobile */}
+           <button 
+             className="lg:hidden ml-2 p-1 hover:bg-zinc-800 rounded"
+             onClick={() => setSidebarOpen(false)}
+           >
+             <X size={16} />
+           </button>
         </div>
 
         {/* Navigation Items */}
@@ -287,22 +310,28 @@ export default function WarRoomDashboard() {
         <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-zinc-900/20 to-transparent pointer-events-none" />
         
         {/* 2a. TOP BAR (Global Search & Status) */}
-        <header className="h-12 border-b border-white/5 flex items-center justify-between px-4 bg-black/50 backdrop-blur-sm relative z-10">
-          {/* Breadcrumbs / Title */}
+        <header className="h-12 border-b border-white/5 flex items-center justify-between px-2 sm:px-4 bg-black/50 backdrop-blur-sm relative z-10">
+          {/* Mobile Menu Button + Breadcrumbs / Title */}
           <div className="flex items-center gap-2 text-sm z-10">
-             <span className="text-zinc-500">PaymentOps</span>
-             <span className="text-zinc-700">/</span>
-             <span className="text-white font-medium">{activeView === 'monitoring' ? 'Live Monitoring' : 'Simulation Console'}</span>
+             <button 
+               className="lg:hidden p-1.5 hover:bg-zinc-800 rounded mr-1"
+               onClick={() => setSidebarOpen(true)}
+             >
+               <Menu size={18} />
+             </button>
+             <span className="text-zinc-500 hidden sm:inline">PaymentOps</span>
+             <span className="text-zinc-700 hidden sm:inline">/</span>
+             <span className="text-white font-medium text-xs sm:text-sm">{activeView === 'monitoring' ? 'Monitoring' : 'Simulation'}</span>
           </div>
 
           {/* Quick Actions / Search */}
-          <div className="flex items-center gap-3">
-             <div className="relative group">
+          <div className="flex items-center gap-2 sm:gap-3">
+             <div className="relative group hidden md:block">
                 <Search size={13} className="absolute left-2.5 top-1.5 text-zinc-500 group-focus-within:text-white transition-colors" />
                 <input 
                   type="text" 
                   placeholder="Search..." 
-                  className="bg-zinc-900/50 border border-white/5 rounded text-sm pl-8 pr-3 py-1 h-7 w-64 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-white/10 focus:ring-1 focus:ring-white/10 transition-all font-sans"
+                  className="bg-zinc-900/50 border border-white/5 rounded text-sm pl-8 pr-3 py-1 h-7 w-48 lg:w-64 text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-white/10 focus:ring-1 focus:ring-white/10 transition-all font-sans"
                 />
                 <div className="absolute right-2 top-1.5 flex items-center gap-0.5">
                    <span className="text-[10px] text-zinc-600 border border-zinc-800 rounded px-1 group-focus-within:border-zinc-700">⌘K</span>
@@ -322,16 +351,16 @@ export default function WarRoomDashboard() {
         </header>
 
         {/* 2b. ACTIVE VIEW CONTENT */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar p-6 relative z-10">
-           <div className="max-w-[1600px] mx-auto space-y-8">
+        <div className="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-4 lg:p-6 relative z-10">
+           <div className="max-w-[1600px] mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
               
               {/* Header Metrics Row (Linear Style: clean text mostly) */}
-              <div className="flex items-baseline justify-between mb-4">
-                 <h2 className="text-lg font-medium text-white tracking-tight">System Status</h2>
-                 <div className="flex items-center gap-6 text-xs font-mono text-zinc-500">
-                    <span className="flex items-center gap-2">UPTIME <span className="text-emerald-500">99.99%</span></span>
-                    <span className="flex items-center gap-2">LAST INCIDENT <span className="text-zinc-300">2d ago</span></span>
-                    <span className="flex items-center gap-2">AGENT <span className={`${agentRunning ? 'text-emerald-500' : 'text-amber-500'}`}>{agentRunning ? 'ONLINE' : 'PAUSED'}</span></span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 mb-3 sm:mb-4">
+                 <h2 className="text-base sm:text-lg font-medium text-white tracking-tight">System Status</h2>
+                 <div className="flex items-center gap-3 sm:gap-6 text-[10px] sm:text-xs font-mono text-zinc-500 overflow-x-auto">
+                    <span className="flex items-center gap-1 sm:gap-2 whitespace-nowrap">UPTIME <span className="text-emerald-500">99.99%</span></span>
+                    <span className="flex items-center gap-1 sm:gap-2 whitespace-nowrap hidden sm:flex">INCIDENT <span className="text-zinc-300">2d</span></span>
+                    <span className="flex items-center gap-1 sm:gap-2 whitespace-nowrap">AGENT <span className={`${agentRunning ? 'text-emerald-500' : 'text-amber-500'}`}>{agentRunning ? 'ON' : 'OFF'}</span></span>
                  </div>
               </div>
 
