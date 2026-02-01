@@ -437,9 +437,8 @@ Respond in JSON format:
                 "policy_context": policy_context
             }
         
-        # FULL AUTONOMY: Override guardrails for now as per user request
-        # requires_approval = self.guardrails.requires_approval(intervention, state)
-        requires_approval = False
+        # Human-in-the-loop: Check if intervention requires human approval
+        requires_approval = self.guardrails.requires_approval(intervention, state)
         
         decide_thought = AgentThought(
             timestamp=datetime.now().isoformat(),
